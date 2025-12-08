@@ -272,6 +272,18 @@ const Home = () => {
                     <div style={{fontSize:12, color:'#8a8a8a'}}>Free cancellation</div>
                   </div>
                 </div>
+
+                <div style={{fontSize:13, color:'#6b6b6b'}}>Comfortable, modern interiors — reliable Wi‑Fi and flexible check‑in.</div>
+
+                <div className="actions" aria-hidden>
+                  <button className="btnOutline">Details</button>
+                  <button className="btnPrimary">Book</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
