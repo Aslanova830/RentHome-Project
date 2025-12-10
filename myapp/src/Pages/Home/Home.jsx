@@ -51,11 +51,17 @@ const Home = () => {
   const resultsRef = useRef(null)
 
   const handleSearchClick = () => {
-    // accessible focus/scroll to results area
-    if (resultsRef.current) {
+    // scroll to results then focus (safe, non-throwing)
+    if (!resultsRef.current) return
+    try {
       resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      resultsRef.current.focus({ preventScroll: true })
+    } catch (err) {
+      resultsRef.current.scrollIntoView()
     }
+    // focus after a short delay so browser finishes scrolling (wrap in try/catch)
+    setTimeout(() => {
+      try { resultsRef.current.focus() } catch (e) { /* ignore focus errors */ }
+    }, 380)
   }
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
@@ -189,6 +195,9 @@ const Home = () => {
         body{margin:0}
 
         .container{max-width:1200px;margin:0 auto;padding:28px 20px 60px}
+        /* ensure stacking context so search and hero don't hide results */
+        .container{position:relative; z-index:1}
+
         .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
         .brand{display:flex;gap:14px;align-items:center}
         .logoBox{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center; background:linear-gradient(135deg,var(--aqua),var(--aqua-600)); color:#fff; font-weight:900; font-size:18px; box-shadow: 0 8px 28px rgba(20,180,180,0.12)}
@@ -197,14 +206,14 @@ const Home = () => {
 
         /* Hero */
         .hero{position:relative;border-radius:18px; overflow:hidden; display:block; margin-bottom:28px; background:linear-gradient(180deg, rgba(10,140,140,0.06), rgba(255,255,255,0.5));}
-        .hero-bg{height:320px;background-image:linear-gradient(180deg, rgba(8,150,150,0.08), rgba(255,255,255,0.2)), url('https://images.unsplash.com/photo-1501117716987-c8e3c9e0b6ec?auto=format&fit=crop&w=1600&q=60'); background-size:cover;background-position:center; filter:contrast(1.02) saturate(.98); transform:translateZ(0)}
-        .hero-inner{position:relative;padding:28px; display:flex; gap:28px; align-items:flex-end}
+        .hero-bg{height:320px;background-image:linear-gradient(180deg, rgba(8,150,150,0.08), rgba(255,255,255,0.2)), url('https://images.unsplash.com/photo-1501117716987-c8e3c9e0b6ec?auto=format&fit=crop&w=1600&q=60'); background-size:cover;background-position:center; filter:contrast(1.02) saturate(.98); transform:translateZ(0); z-index:0}
+        .hero-inner{position:relative;padding:28px; display:flex; gap:28px; align-items:flex-end; z-index:1}
         .greeting{background:var(--glass);backdrop-filter:blur(6px); padding:22px;border-radius:14px; box-shadow: 0 10px 30px rgba(10,20,20,0.06);max-width:640px}
         .greeting h1{margin:0;font-size:32px;color:#0b4; color:var(--aqua); font-weight:900; letter-spacing:-0.6px}
         .greeting p{margin:8px 0 0;color:var(--muted);font-size:15px}
 
         /* Search card */
-        .searchCard{position:absolute;left:50%;transform:translateX(-50%);bottom:-30px;width:calc(100% - 80px);max-width:980px;background:white;border-radius:14px;padding:14px 18px;box-shadow: 0 20px 46px rgba(10,20,20,0.08);display:flex;gap:12px;align-items:center}
+        .searchCard{position:absolute;left:50%;transform:translateX(-50%);bottom:-30px;width:calc(100% - 80px);max-width:980px;background:white;border-radius:14px;padding:14px 18px;box-shadow: 0 20px 46px rgba(10,20,20,0.08);display:flex;gap:12px;align-items:center; z-index:2}
         .field{flex:1;display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;border:1px solid #eef9f9;background:#fbffff}
         .field input{border:0;outline:0;background:transparent;font-size:14px;width:100%}
         .searchBtn{background:var(--aqua);color:#fff;padding:10px 16px;border-radius:10px;border:0;font-weight:800;cursor:pointer;box-shadow:0 10px 30px rgba(26,199,199,0.12)}
@@ -216,7 +225,7 @@ const Home = () => {
 
         /* Grid & cards */
         .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-        .card{background:white;border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .26s cubic-bezier(.2,.9,.3,1),box-shadow .26s;will-change:transform}
+        .card{background:white;border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .26s cubic-bezier(.2,.9,.3,1),box-shadow .26s;will-change:transform; z-index:3}
         .card:hover{transform:translateY(-10px);box-shadow:0 36px 90px rgba(10,20,20,0.12)}
         .card-media{height:180px;position:relative;overflow:hidden;background:#f2fbfb}
         .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;display:block}
@@ -304,7 +313,7 @@ const Home = () => {
           <div className="meta">{results.length} options · Filters: max ${priceMax === 999 ? 'Any' : priceMax}</div>
         </div>
 
-        <main className="grid" aria-live="polite" id="results" tabIndex={-1} ref={resultsRef}>
+        <main className="grid" aria-live="polite" id="results" tabIndex={-1} ref={resultsRef} role="main">
           {results.map((l, idx) => (
             <article
               key={l.id}
