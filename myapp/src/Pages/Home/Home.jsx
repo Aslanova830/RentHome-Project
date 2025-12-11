@@ -308,6 +308,53 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Why choose us + partners — small professional section */}
+        <section className="why-choose" aria-label="Why choose RentHome" style={{marginTop:48}}>
+          <style>{`
+            .why { display:flex; gap:18px; align-items:stretch; margin-bottom:26px; flex-wrap:wrap; }
+            .feature { flex:1; min-width:200px; background:linear-gradient(180deg, rgba(255,255,255,0.9), #fbffff); border-radius:12px; padding:18px; box-shadow:0 12px 30px rgba(10,20,20,0.04); display:flex; gap:12px; align-items:flex-start; }
+            .feature-icon { width:44px; height:44px; border-radius:10px; background:var(--aqua); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; }
+            .feature h4 { margin:0; font-size:15px; font-weight:900; }
+            .feature p { margin:6px 0 0; color:var(--muted); font-size:13px; }
+            .partners { display:flex; gap:18px; align-items:center; margin-top:6px; flex-wrap:wrap; }
+            .partner { opacity:.86; filter:grayscale(.2); width:92px; height:28px; display:flex; align-items:center; justify-content:center; }
+          `}</style>
+
+          <div className="why" aria-hidden>
+            <div className="feature">
+              <div className="feature-icon">€</div>
+              <div>
+                <h4>Competitive prices</h4>
+                <p>Best-in-class rates and transparent fees — curated for value and comfort.</p>
+              </div>
+            </div>
+            <div className="feature">
+              <div className="feature-icon">🔒</div>
+              <div>
+                <h4>Secure booking</h4>
+                <p>Safe demo checkout and protected stored preferences (local only).</p>
+              </div>
+            </div>
+            <div className="feature">
+              <div className="feature-icon">✨</div>
+              <div>
+                <h4>Seamless experience</h4>
+                <p>Fast search, clear listings and pleasant UI that feels professional.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:20,flexWrap:'wrap'}}>
+            <div style={{color:'var(--muted)',fontWeight:700}}>Our partners</div>
+            <div className="partners" aria-hidden>
+              <img className="partner" src="https://picsum.photos/seed/partner1/180/40" alt="partner" />
+              <img className="partner" src="https://picsum.photos/seed/partner2/180/40" alt="partner" />
+              <img className="partner" src="https://picsum.photos/seed/partner3/180/40" alt="partner" />
+              <img className="partner" src="https://picsum.photos/seed/partner4/180/40" alt="partner" />
+            </div>
+          </div>
+        </section>
+
         <div className="resultsHeader">
           <h2>Available stays</h2>
           <div className="meta">{results.length} options · Filters: max ${priceMax === 999 ? 'Any' : priceMax}</div>
